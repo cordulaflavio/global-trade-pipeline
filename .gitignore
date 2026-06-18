@@ -1,0 +1,35 @@
+# Claude Code internal instructions (keep private — not for public portfolio)
+CLAUDE.md
+
+# Data (large raw files — never commit)
+data/
+*.csv
+*.zip
+
+# Secrets / credentials
+.env
+*.env
+*-key.json
+service-account*.json
+credentials*.json
+credentials/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# dbt
+target/
+dbt_packages/
+logs/
+.user.yml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
