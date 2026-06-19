@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: stg_countries
+    description: Cleaned country metadata from BACI/CEPII. One row per country.
+    columns:
+      - name: country_code
+        description: Numeric country code (BACI/CEPII standard), cast to INT64.
+        tests:
+          - not_null
+          - unique
+      - name: country_name
+        description: Country name in English.
+        tests:
+          - not_null
+      - name: iso2
+        description: ISO 3166-1 alpha-2 country code (2 letters).
+      - name: iso3
+        description: ISO 3166-1 alpha-3 country code (3 letters).
+
+  - name: stg_trade_flows
+    description: >
+      Cleaned bilateral trade flows from BACI/CEPII. One row per
+      year × exporter × importer × product (HS6). Values in thousand USD,
+      quantities in metric tons. Covers 2014–2024.
+    columns:
+      - name: year
+        description: Reference year of the trade flow.
+        tests:
+          - not_null
+      - name: exporter_code
+        description: BACI numeric code of the exporting country.
+        tests:
+          - not_null
+      - name: importer_code
+        description: BACI numeric code of the importing country.
+        tests:
+          - not_null
+      - name: product_code
+        description: HS92 6-digit product code, kept as STRING to preserve leading zeros.
+        tests:
+          - not_null
+      - name: trade_value_usd_thousands
+        description: Trade value in thousand USD. NULL when source reports NA.
+      - name: quantity_metric_tons
+        description: Quantity in metric tons. NULL when source reports NA.
+
+  - name: stg_products
+    description: Cleaned and renamed HS92 product codes from the BACI/CEPII source. One row per 6-digit product code.
+    columns:
+      - name: product_code
+        description: HS92 6-digit product code, kept as STRING to preserve leading zeros.
+        tests:
+          - not_null
+          - unique
+      - name: product_description
+        description: Product description in English.
+        tests:
+          - not_null

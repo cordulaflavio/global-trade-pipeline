@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 CREDENTIALS_PATH = Path(__file__).parent.parent / "credentials" / "dbt-service-account-key.json"
 DATA_DIR = Path(__file__).parent.parent / "data"
-PROJECT_ID = "global-trade-pipeline"
+PROJECT_ID = "global-trade-pipeline-raw"
 DATASET = "raw"
 
 TRADE_FLOWS_SCHEMA = [

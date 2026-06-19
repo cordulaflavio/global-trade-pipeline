@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw
+    database: global-trade-pipeline-raw
+    schema: raw
+    description: Raw tables loaded directly from BACI/CEPII CSV files. All columns are STRING — no transformations applied.
+    tables:
+      - name: baci_trade_flows
+        description: Bilateral trade flows at the year × exporter × importer × product grain. Years 2014–2024.
+      - name: country_codes
+        description: Country metadata — numeric code, name, ISO2, ISO3.
+      - name: product_codes
+        description: HS92 product codes and descriptions (~5000 products at 6-digit level).

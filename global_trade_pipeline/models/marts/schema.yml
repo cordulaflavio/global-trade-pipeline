@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: dim_country
+    description: Country dimension. One row per country. Source — BACI/CEPII country codes.
+    columns:
+      - name: country_code
+        description: Numeric country code (BACI/CEPII standard). Primary key.
+        tests:
+          - not_null
+          - unique
+      - name: country_name
+        description: Country name in English.
+        tests:
+          - not_null
+      - name: iso2
+        description: ISO 3166-1 alpha-2 country code (2 letters).
+      - name: iso3
+        description: ISO 3166-1 alpha-3 country code (3 letters).
+
+  - name: dim_product
+    description: Product dimension. One row per HS92 6-digit product code. Source — BACI/CEPII product codes.
+    columns:
+      - name: product_code
+        description: HS92 6-digit product code (STRING — leading zeros preserved). Primary key.
+        tests:
+          - not_null
+          - unique
+      - name: product_description
+        description: Product description in English.
+        tests:
+          - not_null
+      - name: hs2_code
+        description: HS chapter code (first 2 digits of product_code). Groups products into ~97 broad categories.
+        tests:
+          - not_null
+
+  - name: fact_trade_flows
+    description: >
+      Bilateral trade flows at the year × exporter × importer × product grain.
+      Values in thousand USD, quantities in metric tons. Covers 2014–2024 (~118M rows).
+    columns:
+      - name: year
+        description: Reference year of the trade flow.
+        tests:
+          - not_null
+      - name: exporter_code
+        description: BACI numeric code of the exporting country. Foreign key to dim_country.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_country')
+              field: country_code
+      - name: importer_code
+        description: BACI numeric code of the importing country. Foreign key to dim_country.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_country')
+              field: country_code
+      - name: product_code
+        description: HS92 6-digit product code. Foreign key to dim_product.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_code
+      - name: trade_value_usd_thousands
+        description: Trade value in thousand USD. NULL when not reported.
+      - name: quantity_metric_tons
+        description: Quantity in metric tons. NULL when not reported.
