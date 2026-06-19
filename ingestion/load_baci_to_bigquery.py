@@ -11,7 +11,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-CREDENTIALS_PATH = Path(__file__).parent.parent / "credentials" / "dbt-service-account-key.json"
+CREDENTIALS_PATH = Path.home() / ".gcp" / "dbt-service-account-key.json"
 DATA_DIR = Path(__file__).parent.parent / "data"
 PROJECT_ID = "global-trade-pipeline-raw"
 DATASET = "raw"
