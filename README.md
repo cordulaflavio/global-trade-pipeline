@@ -44,7 +44,7 @@ BACI / CEPII  (annual CSV bulk download, 2014–2024)
 | Layer | Tool | Role |
 |---|---|---|
 | Ingestion | **Python** | Loads the BACI CSVs into the BigQuery raw layer |
-| Warehouse | **BigQuery** (Sandbox / free tier, no billing) | Serverless storage + SQL engine, two projects |
+| Warehouse | **BigQuery** (free tier, billing enabled) | Serverless storage + SQL engine, two projects |
 | Transformation | **dbt** | staging → dims → fact, with tests and YAML docs |
 | BI | **Power BI** | Report on the dimensional model (BigQuery connector) |
 
@@ -82,7 +82,7 @@ The BigQuery Sandbox caps storage at **10 GB per project**. A full `dbt build` f
 
 **Diagnosis** (via `__TABLES__` byte counts): the project already held **raw (4.57 GB) + fact (5.67 GB) = 10.24 GB** at rest — *already over the cap*. Any temporary table the build created tipped it over. It was **not** fact duplication (incremental doesn't duplicate), **not** staging materialized as tables (they were already views), and **not** orphaned junk.
 
-**Solution:** because the 10 GB quota is **per project**, the raw layer was moved to a **second BigQuery project** (`global-trade-pipeline-raw`). The dbt sources now read **cross-project**; the main project keeps only the fact (5.67 GB) with ~4.3 GB of headroom. This solved it **without** aggregating the fact, turning it into a view, or enabling billing.
+**Solution:** because the 10 GB quota is **per project**, the raw layer was moved to a **second BigQuery project** (`global-trade-pipeline-raw`). The dbt sources now read **cross-project**; the main project keeps only the fact (5.67 GB) with ~4.3 GB of headroom. Billing was also enabled (required for DML/incremental runs) — cost stays within the free tier limits.
 
 ### 2. Incremental fact instead of full rebuild
 At 118M rows, rebuilding the fact on every run is wasteful and storage-spiky. `incremental` + `insert_overwrite` rewrites **only the affected year partitions**, keeping runs fast and storage flat.
