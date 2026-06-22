@@ -22,3 +22,7 @@ models:
     marts:
       +materialized: table
       +schema: marts
+      dim_exporter:
+        +materialized: view
+      dim_importer:
+        +materialized: view

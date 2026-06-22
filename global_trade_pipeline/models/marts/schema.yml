@@ -18,6 +18,36 @@ models:
       - name: iso3
         description: ISO 3166-1 alpha-3 country code (3 letters).
 
+  - name: dim_exporter
+    description: Role-playing dimension — same data as dim_country, used for the exporting country in fact_trade_flows.
+    columns:
+      - name: country_code
+        description: Numeric country code. Foreign key from fact_trade_flows.exporter_code.
+        tests:
+          - not_null
+          - unique
+      - name: country_name
+        description: Country name in English.
+      - name: iso2
+        description: ISO 3166-1 alpha-2 country code.
+      - name: iso3
+        description: ISO 3166-1 alpha-3 country code.
+
+  - name: dim_importer
+    description: Role-playing dimension — same data as dim_country, used for the importing country in fact_trade_flows.
+    columns:
+      - name: country_code
+        description: Numeric country code. Foreign key from fact_trade_flows.importer_code.
+        tests:
+          - not_null
+          - unique
+      - name: country_name
+        description: Country name in English.
+      - name: iso2
+        description: ISO 3166-1 alpha-2 country code.
+      - name: iso3
+        description: ISO 3166-1 alpha-3 country code.
+
   - name: dim_product
     description: Product dimension. One row per HS92 6-digit product code. Source — BACI/CEPII product codes.
     columns:
@@ -45,18 +75,18 @@ models:
         tests:
           - not_null
       - name: exporter_code
-        description: BACI numeric code of the exporting country. Foreign key to dim_country.
+        description: BACI numeric code of the exporting country. Foreign key to dim_exporter.
         tests:
           - not_null
           - relationships:
-              to: ref('dim_country')
+              to: ref('dim_exporter')
               field: country_code
       - name: importer_code
-        description: BACI numeric code of the importing country. Foreign key to dim_country.
+        description: BACI numeric code of the importing country. Foreign key to dim_importer.
         tests:
           - not_null
           - relationships:
-              to: ref('dim_country')
+              to: ref('dim_importer')
               field: country_code
       - name: product_code
         description: HS92 6-digit product code. Foreign key to dim_product.
