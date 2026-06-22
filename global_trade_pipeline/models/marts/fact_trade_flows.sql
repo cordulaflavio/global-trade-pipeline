@@ -18,7 +18,7 @@ with trade_flows as (
         exporter_code,
         importer_code,
         product_code,
-        trade_value_usd_thousands,
+        trade_value_usd_thousands * 1000 as trade_value_usd,
         quantity_metric_tons
     from {{ ref('stg_trade_flows') }}
     {% if is_incremental() %}
@@ -31,6 +31,6 @@ select
     exporter_code,
     importer_code,
     product_code,
-    trade_value_usd_thousands,
+    trade_value_usd,
     quantity_metric_tons
 from trade_flows

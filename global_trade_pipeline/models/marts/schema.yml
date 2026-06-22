@@ -38,7 +38,7 @@ models:
   - name: fact_trade_flows
     description: >
       Bilateral trade flows at the year × exporter × importer × product grain.
-      Values in thousand USD, quantities in metric tons. Covers 2014–2024 (~118M rows).
+      Values in USD, quantities in metric tons. Covers 2014–2024 (~118M rows).
     columns:
       - name: year
         description: Reference year of the trade flow.
@@ -65,7 +65,7 @@ models:
           - relationships:
               to: ref('dim_product')
               field: product_code
-      - name: trade_value_usd_thousands
-        description: Trade value in thousand USD. NULL when not reported.
+      - name: trade_value_usd
+        description: Trade value in USD (converted from thousand USD source values). NULL when not reported.
       - name: quantity_metric_tons
         description: Quantity in metric tons. NULL when not reported.
