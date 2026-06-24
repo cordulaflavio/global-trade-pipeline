@@ -1,0 +1,35 @@
+version: 2
+
+seeds:
+  - name: country_regions
+    description: Maps BACI country codes to geographic region and continent.
+    config:
+      column_types:
+        country_code: INT64
+        region: STRING
+        continent: STRING
+    columns:
+      - name: country_code
+        description: BACI numeric country code. Primary key.
+        tests:
+          - not_null
+          - unique
+      - name: region
+        description: Geographic sub-region (e.g. Western Europe, South Asia).
+      - name: continent
+        description: Continent (Africa, North America, Latin America & Caribbean, Asia, Europe, Oceania).
+
+  - name: hs2_descriptions
+    description: HS92 chapter (2-digit) codes and their descriptions.
+    config:
+      column_types:
+        hs2_code: STRING
+        hs2_description: STRING
+    columns:
+      - name: hs2_code
+        description: HS92 2-digit chapter code. Primary key.
+        tests:
+          - not_null
+          - unique
+      - name: hs2_description
+        description: Human-readable description of the HS2 chapter.

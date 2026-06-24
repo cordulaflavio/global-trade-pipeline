@@ -63,7 +63,7 @@ def load_products(client: bigquery.Client) -> None:
     file = DATA_DIR / "product_codes_HS92_V202601.csv"
     logger.info("Loading products from %s", file.name)
 
-    df = pd.read_csv(file, dtype=str)
+    df = pd.read_csv(file, dtype=str, encoding='latin-1')
     table_id = f"{PROJECT_ID}.{DATASET}.product_codes"
     job_config = bigquery.LoadJobConfig(
         schema=PRODUCT_SCHEMA,
