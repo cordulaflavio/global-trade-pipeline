@@ -27,6 +27,13 @@ target/
 dbt_packages/
 logs/
 .user.yml
+build_log.txt
+
+# Power BI (imported model is ~1GB — exceeds GitHub's 100MB limit; keep local)
+*.pbix
+
+# Reference screenshots (local only)
+references/
 
 # OS / editor
 .DS_Store
