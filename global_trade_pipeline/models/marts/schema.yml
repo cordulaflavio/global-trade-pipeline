@@ -64,6 +64,28 @@ models:
         description: HS chapter code (first 2 digits of product_code). Groups products into ~97 broad categories.
         tests:
           - not_null
+      - name: hs2_description
+        description: Human-readable description of the HS2 chapter.
+      - name: product_category
+        description: >
+          Broad product sector (~11 categories) derived from the HS2 chapter.
+          Boundaries approximate the Atlas of Economic Complexity sector scheme via HS2 ranges.
+          Goods only — BACI has no services.
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'Agriculture & Food'
+                - 'Minerals & Fuels'
+                - 'Chemicals & Plastics'
+                - 'Textiles, Apparel & Leather'
+                - 'Wood & Paper'
+                - 'Stone, Glass & Gems'
+                - 'Metals'
+                - 'Machinery'
+                - 'Electronics'
+                - 'Transport & Vehicles'
+                - 'Instruments & Other'
 
   - name: fact_trade_flows
     description: >
