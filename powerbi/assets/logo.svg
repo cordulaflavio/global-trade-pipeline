@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- outer ring -->
+  <circle cx="256" cy="256" r="196" fill="none" stroke="#ffffff" stroke-width="14"/>
+  <!-- inner ring -->
+  <circle cx="256" cy="256" r="168" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.5"/>
+  <!-- 4-point compass star (white) -->
+  <path d="M256 82 L300 212 L426 256 L300 300 L256 430 L212 300 L86 256 L212 212 Z" fill="#ffffff"/>
+  <!-- North point accent (gold) -->
+  <path d="M256 82 L300 212 L212 212 Z" fill="#f6c453"/>
+  <!-- center dot -->
+  <circle cx="256" cy="256" r="16" fill="#f6c453"/>
+</svg>
