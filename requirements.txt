@@ -1,1 +1,14 @@
+# Transformation
+# dbt-core is pinned explicitly, not left to the resolver: without it the
+# container and the local venv drift onto different dbt versions.
+dbt-core==1.11.11
 dbt-bigquery==1.11.1
+
+# Python ingestion (ingestion/load_baci_to_bigquery.py)
+google-cloud-bigquery==3.42.0
+pandas==3.0.3
+pyarrow==24.0.0
+db-dtypes==1.7.0
+
+# Orchestration (Airflow) is installed in a SEPARATE virtualenv to avoid
+# dependency conflicts with dbt. See airflow/setup_cloudshell.sh.
