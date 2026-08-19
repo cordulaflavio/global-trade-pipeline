@@ -1,0 +1,162 @@
+# Local Airflow 3 stack for the Global Trade Pipeline.
+#
+#   docker compose up -d        start        (UI on http://localhost:8080)
+#   docker compose logs -f      follow logs
+#   docker compose down         stop, keeping the metadata database
+#
+# Airflow 3 splits responsibilities that Airflow 2 kept together, so this runs four
+# Airflow processes rather than two:
+#
+#   api-server      serves the UI and the Task Execution API (replaces `webserver`)
+#   scheduler       decides what runs when
+#   dag-processor   parses DAG files in its own process — in Airflow 3 this is a
+#                   separate component, so a bad DAG file cannot stall the scheduler
+#   airflow-init    runs once: migrates the metadata schema, creates the admin user
+#
+# Deliberately omitted: redis + celery worker + flower (CeleryExecutor buys
+# cross-machine scaling a single-DAG pipeline does not need — LocalExecutor still runs
+# tasks in parallel), and the triggerer (only required by deferrable operators, and
+# this DAG has none).
+
+name: global-trade-pipeline
+
+x-airflow-common: &airflow-common
+  build:
+    # Repo root, so the image can COPY requirements.txt.
+    context: ..
+    dockerfile: airflow/Dockerfile
+  environment: &airflow-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    # Airflow 3 workers talk to the scheduler through the Task Execution API.
+    AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-apiserver:8080/execution/
+    AIRFLOW__API_AUTH__JWT_SECRET: local-dev-not-a-secret
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+    # Paused on arrival: the DAG's monthly schedule has intervals already in the past,
+    # so an unpaused DAG would fire a run the moment the scheduler starts. Triggering
+    # it by hand keeps execution deliberate.
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+
+    # Lets the DAG import the ingestion module without guessing at paths.
+    PIPELINE_ROOT: /opt/airflow
+    PYTHONPATH: /opt/airflow
+
+    # dbt lives in its own virtualenv inside the image (see Dockerfile).
+    DBT_BIN: /home/airflow/dbt-venv/bin/dbt
+    DBT_PROJECT_DIR: /opt/airflow/dbt
+    DBT_PROFILES_DIR: /opt/airflow/dbt-profile
+    DBT_TARGET: dev
+
+    # Ingestion configuration. The key itself is mounted read-only, never baked in.
+    BACI_CREDENTIALS_PATH: /opt/airflow/gcp/dbt-service-account-key.json
+    BACI_DATA_DIR: /opt/airflow/data
+    BACI_RAW_PROJECT_ID: global-trade-pipeline-raw
+    BACI_RAW_DATASET: raw
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ../ingestion:/opt/airflow/ingestion
+    - ../global_trade_pipeline:/opt/airflow/dbt
+    - ./dbt-profile:/opt/airflow/dbt-profile:ro
+    # Read-only: the loader only ever reads these CSVs (3.6 GB, mounted not copied,
+    # so they stay out of the image).
+    - ../data:/opt/airflow/data:ro
+    # Read-only: a credential must never be writable by, or baked into, the image.
+    - ${GCP_KEY_DIR:-~/.gcp}:/opt/airflow/gcp:ro
+    - airflow-logs:/opt/airflow/logs
+  user: "50000:0"
+  depends_on:
+    postgres:
+      condition: service_healthy
+    airflow-init:
+      condition: service_completed_successfully
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # Runs once, then exits. The image entrypoint reads the _AIRFLOW_* variables below
+  # and performs the migration and user creation itself.
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - exec /entrypoint airflow version
+    environment:
+      <<: *airflow-env
+      _AIRFLOW_DB_MIGRATE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin
+    user: "0:0"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  airflow-apiserver:
+    <<: *airflow-common
+    command: api-server
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/monitor/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    healthcheck:
+      test: ["CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # Not strictly required — no task in this DAG defers — but Airflow reports a missing
+  # triggerer as unhealthy on the home screen, and a red badge is worse than a
+  # near-idle container.
+  airflow-triggerer:
+    <<: *airflow-common
+    command: triggerer
+    healthcheck:
+      test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  airflow-dag-processor:
+    <<: *airflow-common
+    command: dag-processor
+    healthcheck:
+      test: ["CMD-SHELL", 'airflow jobs check --job-type DagProcessorJob --hostname "$${HOSTNAME}"']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+volumes:
+  postgres-db:
+  airflow-logs:

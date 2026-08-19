@@ -1,0 +1,21 @@
+# dbt profile used INSIDE the Airflow container only.
+#
+# Flavio's personal ~/.dbt/profiles.yml is deliberately NOT mounted: it holds
+# credentials for unrelated projects, and none of that belongs in a container.
+# This file is safe to commit — `keyfile` is a path, not a key. The key itself is
+# mounted read-only at run time (see docker-compose.yml) and stays git-ignored.
+
+global_trade_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      keyfile: /opt/airflow/gcp/dbt-service-account-key.json
+      project: global-trade-pipeline
+      dataset: dbt_dev
+      location: us-central1
+      threads: 4
+      priority: interactive
+      job_execution_timeout_seconds: 300
+      job_retries: 1
