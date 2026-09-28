@@ -109,7 +109,7 @@ Staging models are **views**, not tables — zero storage cost, and the typing/c
 ### Prerequisites
 - Python 3.11
 - Two BigQuery projects in **`us-central1`**: `global-trade-pipeline` (models) and `global-trade-pipeline-raw` (raw)
-- A GCP service account key at `credentials/dbt-service-account-key.json` with access to **both** projects
+- A GCP service account key with access to **both** projects, kept **outside the repo** at `~/.gcp/dbt-service-account-key.json`
 - BACI CSV files in `data/` (not committed — see below)
 
 ### Get the data
@@ -132,6 +132,25 @@ py -3.11 -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+### Configure dbt and credentials
+Copy the `global_trade_pipeline` block from
+[`global_trade_pipeline/profiles.yml.example`](global_trade_pipeline/profiles.yml.example)
+into your `~/.dbt/profiles.yml`. It holds no secrets: the key path comes from an
+environment variable.
+
+```powershell
+$env:DBT_KEYFILE = "$HOME\.gcp\dbt-service-account-key.json"   # read by dbt
+cd global_trade_pipeline
+dbt debug                                                      # checks the connection
+```
+
+The ingestion script finds the key at `~/.gcp/dbt-service-account-key.json` by default
+(override with `BACI_CREDENTIALS_PATH`).
+
+**Running in your own GCP account?** Project ids are globally unique, so use your own:
+set `project` in your profile to your models project, and set `BACI_RAW_PROJECT_ID` to
+your raw project. Both the loader and the dbt sources read that variable.
 
 ### 1. Ingest raw data
 ```bash

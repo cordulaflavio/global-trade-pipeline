@@ -10,6 +10,8 @@ data/
 !global_trade_pipeline/seeds/*.csv
 
 # Secrets / credentials
+# A real dbt profile must stay in ~/.dbt, never in the repo (see profiles.yml.example)
+global_trade_pipeline/profiles.yml
 .env
 *.env
 *-key.json

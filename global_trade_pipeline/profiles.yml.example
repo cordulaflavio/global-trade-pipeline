@@ -1,0 +1,30 @@
+# Example dbt profile for this project. It contains NO secrets.
+#
+# dbt ignores this file by name. To use it:
+#   1. Copy the `global_trade_pipeline:` block below into your own ~/.dbt/profiles.yml
+#      (create the file if it does not exist).
+#   2. Point DBT_KEYFILE at your GCP service account key, which lives outside the repo:
+#        PowerShell:  $env:DBT_KEYFILE = "$HOME\.gcp\dbt-service-account-key.json"
+#        bash:        export DBT_KEYFILE="$HOME/.gcp/dbt-service-account-key.json"
+#   3. Check the connection:  dbt debug
+#
+# The service account needs BigQuery access to BOTH projects: this one (models) and
+# global-trade-pipeline-raw (raw sources, read cross-project).
+#
+# Running in your own GCP account? Project ids are globally unique, so replace
+# `project` below with your models project, and set BACI_RAW_PROJECT_ID to your raw project.
+
+global_trade_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      keyfile: "{{ env_var('DBT_KEYFILE') }}"
+      project: global-trade-pipeline
+      dataset: dbt_dev
+      location: us-central1
+      threads: 4
+      priority: interactive
+      job_execution_timeout_seconds: 300
+      job_retries: 1

@@ -2,7 +2,9 @@ version: 2
 
 sources:
   - name: raw
-    database: global-trade-pipeline-raw
+    # Raw lives in its own GCP project (see README, decision #1). Override with
+    # BACI_RAW_PROJECT_ID to point at your own project; the loader reads the same variable.
+    database: "{{ env_var('BACI_RAW_PROJECT_ID', 'global-trade-pipeline-raw') }}"
     schema: raw
     description: Raw tables loaded directly from BACI/CEPII CSV files. All columns are STRING — no transformations applied.
     tables:
