@@ -118,7 +118,21 @@ Staging models are **views**, not tables — zero storage cost, and the typing/c
 - Python 3.11
 - Two BigQuery projects in **`us-central1`**: `global-trade-pipeline` (models) and `global-trade-pipeline-raw` (raw)
 - A GCP service account key at `credentials/dbt-service-account-key.json` with access to **both** projects
-- BACI CSV files in `data/` (not committed — download from CEPII)
+- BACI CSV files in `data/` (not committed — see below)
+
+### Get the data
+Download the BACI **HS92, release V202601** bundle from CEPII
+([dataset page](https://www.cepii.fr/CEPII/en/bdd_modele/bdd_modele_item.asp?id=37)) and
+unzip it into `data/`:
+
+```bash
+curl -L -o data/BACI_HS92_V202601.zip https://www.cepii.fr/DATA_DOWNLOAD/baci/data/BACI_HS92_V202601.zip
+unzip data/BACI_HS92_V202601.zip -d data/
+```
+
+The bundle covers 1995–2024; this project loads **2014–2024**
+(`BACI_HS92_Y2014_V202601.csv` … `BACI_HS92_Y2024_V202601.csv`) plus
+`country_codes_V202601.csv` and `product_codes_HS92_V202601.csv`.
 
 ### Setup
 ```bash
@@ -136,6 +150,7 @@ python ingestion/load_baci_to_bigquery.py --year 2024 # one year, idempotent (re
 ### 2. Build and test the models
 ```bash
 cd global_trade_pipeline
+dbt seed   # reference data: country regions, HS2 descriptions
 dbt run
 dbt test
 ```

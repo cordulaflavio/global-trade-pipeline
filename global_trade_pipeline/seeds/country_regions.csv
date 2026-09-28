@@ -1,0 +1,253 @@
+country_code,region,continent
+4,South Asia,Asia
+8,Southern Europe,Europe
+12,Northern Africa,Africa
+16,Oceania,Oceania
+20,Western Europe,Europe
+24,Sub-Saharan Africa,Africa
+28,Caribbean,Latin America & Caribbean
+31,Caucasus,Asia
+32,South America,Latin America & Caribbean
+36,Oceania,Oceania
+40,Western Europe,Europe
+44,Caribbean,Latin America & Caribbean
+48,Middle East,Asia
+50,South Asia,Asia
+51,Caucasus,Asia
+52,Caribbean,Latin America & Caribbean
+56,Western Europe,Europe
+60,Caribbean,Latin America & Caribbean
+64,South Asia,Asia
+68,South America,Latin America & Caribbean
+70,Southern Europe,Europe
+72,Sub-Saharan Africa,Africa
+76,South America,Latin America & Caribbean
+84,Central America,Latin America & Caribbean
+90,Oceania,Oceania
+96,Southeast Asia,Asia
+100,Eastern Europe,Europe
+104,Southeast Asia,Asia
+108,Sub-Saharan Africa,Africa
+112,Eastern Europe,Europe
+116,Southeast Asia,Asia
+120,Sub-Saharan Africa,Africa
+124,North America,North America
+132,Sub-Saharan Africa,Africa
+136,Caribbean,Latin America & Caribbean
+140,Sub-Saharan Africa,Africa
+144,South Asia,Asia
+148,Sub-Saharan Africa,Africa
+152,South America,Latin America & Caribbean
+156,East Asia,Asia
+158,East Asia,Asia
+170,South America,Latin America & Caribbean
+174,Sub-Saharan Africa,Africa
+175,Sub-Saharan Africa,Africa
+178,Sub-Saharan Africa,Africa
+180,Sub-Saharan Africa,Africa
+184,Oceania,Oceania
+188,Central America,Latin America & Caribbean
+191,Southern Europe,Europe
+192,Caribbean,Latin America & Caribbean
+196,Southern Europe,Europe
+203,Eastern Europe,Europe
+204,Sub-Saharan Africa,Africa
+208,Northern Europe,Europe
+212,Caribbean,Latin America & Caribbean
+214,Caribbean,Latin America & Caribbean
+218,South America,Latin America & Caribbean
+222,Central America,Latin America & Caribbean
+226,Sub-Saharan Africa,Africa
+231,Sub-Saharan Africa,Africa
+232,Sub-Saharan Africa,Africa
+233,Northern Europe,Europe
+242,Oceania,Oceania
+246,Northern Europe,Europe
+250,Western Europe,Europe
+254,South America,Latin America & Caribbean
+258,Oceania,Oceania
+262,Sub-Saharan Africa,Africa
+266,Sub-Saharan Africa,Africa
+268,Caucasus,Asia
+270,Sub-Saharan Africa,Africa
+275,Middle East,Asia
+276,Western Europe,Europe
+288,Sub-Saharan Africa,Africa
+296,Oceania,Oceania
+300,Southern Europe,Europe
+308,Caribbean,Latin America & Caribbean
+312,Caribbean,Latin America & Caribbean
+316,Oceania,Oceania
+320,Central America,Latin America & Caribbean
+324,Sub-Saharan Africa,Africa
+328,South America,Latin America & Caribbean
+332,Caribbean,Latin America & Caribbean
+340,Central America,Latin America & Caribbean
+344,East Asia,Asia
+348,Eastern Europe,Europe
+352,Northern Europe,Europe
+356,South Asia,Asia
+360,Southeast Asia,Asia
+364,Middle East,Asia
+368,Middle East,Asia
+372,Western Europe,Europe
+376,Middle East,Asia
+380,Southern Europe,Europe
+384,Sub-Saharan Africa,Africa
+388,Caribbean,Latin America & Caribbean
+392,East Asia,Asia
+398,Central Asia,Asia
+400,Middle East,Asia
+404,Sub-Saharan Africa,Africa
+408,East Asia,Asia
+410,East Asia,Asia
+414,Middle East,Asia
+417,Central Asia,Asia
+418,Southeast Asia,Asia
+422,Middle East,Asia
+426,Sub-Saharan Africa,Africa
+428,Northern Europe,Europe
+430,Sub-Saharan Africa,Africa
+434,Northern Africa,Africa
+438,Western Europe,Europe
+440,Northern Europe,Europe
+442,Western Europe,Europe
+446,East Asia,Asia
+450,Sub-Saharan Africa,Africa
+454,Sub-Saharan Africa,Africa
+458,Southeast Asia,Asia
+462,South Asia,Asia
+466,Sub-Saharan Africa,Africa
+470,Southern Europe,Europe
+474,Caribbean,Latin America & Caribbean
+478,Sub-Saharan Africa,Africa
+480,Sub-Saharan Africa,Africa
+484,North America,North America
+490,Other Asia,Asia
+492,Western Europe,Europe
+496,East Asia,Asia
+498,Eastern Europe,Europe
+499,Southern Europe,Europe
+504,Northern Africa,Africa
+508,Sub-Saharan Africa,Africa
+512,Middle East,Asia
+516,Sub-Saharan Africa,Africa
+520,Oceania,Oceania
+524,South Asia,Asia
+528,Western Europe,Europe
+530,Caribbean,Latin America & Caribbean
+533,Caribbean,Latin America & Caribbean
+540,Oceania,Oceania
+548,Oceania,Oceania
+554,Oceania,Oceania
+558,Central America,Latin America & Caribbean
+562,Sub-Saharan Africa,Africa
+566,Sub-Saharan Africa,Africa
+570,Oceania,Oceania
+579,Northern Europe,Europe
+583,Oceania,Oceania
+584,Oceania,Oceania
+585,Oceania,Oceania
+586,South Asia,Asia
+591,Central America,Latin America & Caribbean
+598,Oceania,Oceania
+600,South America,Latin America & Caribbean
+604,South America,Latin America & Caribbean
+608,Southeast Asia,Asia
+616,Eastern Europe,Europe
+620,Southern Europe,Europe
+624,Sub-Saharan Africa,Africa
+626,Southeast Asia,Asia
+630,Caribbean,Latin America & Caribbean
+634,Middle East,Asia
+638,Sub-Saharan Africa,Africa
+642,Eastern Europe,Europe
+643,Eastern Europe,Europe
+646,Sub-Saharan Africa,Africa
+659,Caribbean,Latin America & Caribbean
+660,Caribbean,Latin America & Caribbean
+662,Caribbean,Latin America & Caribbean
+670,Caribbean,Latin America & Caribbean
+674,Southern Europe,Europe
+678,Sub-Saharan Africa,Africa
+682,Middle East,Asia
+686,Sub-Saharan Africa,Africa
+688,Southern Europe,Europe
+694,Sub-Saharan Africa,Africa
+697,Western Europe,Europe
+702,Southeast Asia,Asia
+703,Eastern Europe,Europe
+704,Southeast Asia,Asia
+705,Southern Europe,Europe
+706,Sub-Saharan Africa,Africa
+710,Sub-Saharan Africa,Africa
+711,Sub-Saharan Africa,Africa
+716,Sub-Saharan Africa,Africa
+724,Southern Europe,Europe
+728,Sub-Saharan Africa,Africa
+729,Northern Africa,Africa
+732,Northern Africa,Africa
+740,South America,Latin America & Caribbean
+744,Northern Europe,Europe
+748,Sub-Saharan Africa,Africa
+752,Northern Europe,Europe
+756,Western Europe,Europe
+760,Middle East,Asia
+762,Central Asia,Asia
+764,Southeast Asia,Asia
+768,Sub-Saharan Africa,Africa
+776,Oceania,Oceania
+780,Caribbean,Latin America & Caribbean
+784,Middle East,Asia
+788,Northern Africa,Africa
+792,Eastern Europe,Europe
+795,Central Asia,Asia
+798,Oceania,Oceania
+800,Sub-Saharan Africa,Africa
+804,Eastern Europe,Europe
+807,Southern Europe,Europe
+818,Northern Africa,Africa
+826,Western Europe,Europe
+834,Sub-Saharan Africa,Africa
+840,North America,North America
+854,Sub-Saharan Africa,Africa
+858,South America,Latin America & Caribbean
+860,Central Asia,Asia
+862,South America,Latin America & Caribbean
+882,Oceania,Oceania
+887,Middle East,Asia
+894,Sub-Saharan Africa,Africa
+58,Western Europe,Europe
+86,South Asia,Asia
+92,Caribbean,Latin America & Caribbean
+162,Oceania,Oceania
+166,Oceania,Oceania
+200,Eastern Europe,Europe
+238,South America,Latin America & Caribbean
+251,Western Europe,Europe
+260,Oceania,Oceania
+278,Western Europe,Europe
+280,Western Europe,Europe
+292,Southern Europe,Europe
+304,Northern Europe,Europe
+500,Caribbean,Latin America & Caribbean
+531,Caribbean,Latin America & Caribbean
+534,Caribbean,Latin America & Caribbean
+535,Caribbean,Latin America & Caribbean
+574,Oceania,Oceania
+580,Oceania,Oceania
+612,Oceania,Oceania
+652,Caribbean,Latin America & Caribbean
+654,Sub-Saharan Africa,Africa
+666,North America,North America
+690,Sub-Saharan Africa,Africa
+699,South Asia,Asia
+736,Northern Africa,Africa
+757,Western Europe,Europe
+772,Oceania,Oceania
+796,Caribbean,Latin America & Caribbean
+810,Eastern Europe,Europe
+842,North America,North America
+849,Oceania,Oceania
+876,Oceania,Oceania
+891,Southern Europe,Europe

@@ -5,6 +5,8 @@ CLAUDE.md
 data/
 *.csv
 *.zip
+# ...except dbt seeds: small, hand-curated reference data that dbt needs to build
+!global_trade_pipeline/seeds/*.csv
 
 # Secrets / credentials
 .env
