@@ -1,10 +1,9 @@
 """Load BACI/CEPII bulk CSVs into the BigQuery raw layer.
 
-Runs standalone (`python ingestion/load_baci_to_bigquery.py`) and is imported by the
-Airflow DAG in `airflow/dags/global_trade_pipeline.py`.
+Run it with `python ingestion/load_baci_to_bigquery.py`.
 
-Configuration comes from environment variables so no path or project id is hardcoded
-in the DAG, and no credential ever lands in the repo:
+Configuration comes from environment variables so no path or project id is hardcoded,
+and no credential ever lands in the repo:
 
     BACI_CREDENTIALS_PATH   service account key        (default: ~/.gcp/dbt-service-account-key.json)
     BACI_DATA_DIR           directory holding the CSVs (default: <repo>/data)
@@ -77,25 +76,6 @@ def get_client() -> bigquery.Client:
 def trade_flows_file(year: int) -> Path:
     """Path of the BACI CSV for a single year."""
     return DATA_DIR / f"BACI_HS92_Y{year}_{BACI_RELEASE}.csv"
-
-
-def source_files_available(year: int) -> bool:
-    """True when every CSV needed to ingest `year` is present in DATA_DIR.
-
-    The Airflow DAG uses this to short-circuit the ingestion branch: BACI publishes
-    once a year, so most scheduled runs have nothing new to load.
-    """
-    expected = [
-        trade_flows_file(year),
-        DATA_DIR / f"country_codes_{BACI_RELEASE}.csv",
-        DATA_DIR / f"product_codes_HS92_{BACI_RELEASE}.csv",
-    ]
-    missing = [f.name for f in expected if not f.exists()]
-    if missing:
-        logger.warning("Missing source files in %s: %s", DATA_DIR, ", ".join(missing))
-        return False
-    logger.info("All source files for %d found in %s", year, DATA_DIR)
-    return True
 
 
 def load_countries(client: bigquery.Client) -> None:

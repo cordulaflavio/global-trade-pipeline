@@ -9,6 +9,3 @@ google-cloud-bigquery==3.42.0
 pandas==3.0.3
 pyarrow==24.0.0
 db-dtypes==1.7.0
-
-# Orchestration (Airflow) is installed in a SEPARATE virtualenv to avoid
-# dependency conflicts with dbt. See airflow/setup_cloudshell.sh.

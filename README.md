@@ -2,7 +2,7 @@
 
 End-to-end **analytics engineering pipeline** for international trade data — from raw bilateral trade flows (118M+ rows) to an analytics-ready dimensional model on BigQuery, served in Power BI.
 
-**Stack:** Python · dbt · BigQuery · Airflow 3 · Docker · Power BI
+**Stack:** Python · dbt · BigQuery · Power BI
 
 ---
 
@@ -23,7 +23,6 @@ The pipeline is split across **two BigQuery projects on purpose** (see *Engineer
 ```
 BACI / CEPII  (annual CSV bulk download, 2014–2024)
       │   Python ingestion (ingestion/load_baci_to_bigquery.py)
-      │   orchestrated by Airflow 3 on Docker (airflow/)
       ▼
 ┌─────────────────────────────────────────────┐
 │ BigQuery project: global-trade-pipeline-raw │   RAW layer (isolated)
@@ -40,13 +39,6 @@ BACI / CEPII  (annual CSV bulk download, 2014–2024)
    Power BI report
 ```
 
-### Orchestration in action
-
-![Airflow 3 running the pipeline: all nine tasks green, and the ingestion log showing 10,580,049 rows deleted and reloaded](docs/images/airflow-task-log.png)
-
-The whole pipeline runs as one Airflow DAG — 9 tasks in 125 seconds, ingestion through dbt
-tests. Task-by-task breakdown and design reasoning in [`airflow/README.md`](airflow/README.md).
-
 ## Tech stack
 
 | Layer | Tool | Role |
@@ -54,8 +46,6 @@ tests. Task-by-task breakdown and design reasoning in [`airflow/README.md`](airf
 | Ingestion | **Python** | Loads the BACI CSVs into the BigQuery raw layer |
 | Warehouse | **BigQuery** (free tier, billing enabled) | Serverless storage + SQL engine, two projects |
 | Transformation | **dbt** | staging → dims → fact, with tests and YAML docs |
-| Orchestration | **Apache Airflow 3** | Schedules and sequences ingestion → dbt run → dbt test |
-| Containerisation | **Docker Compose** | Reproducible 5-service Airflow stack (incl. Postgres metadata DB) |
 | BI | **Power BI** | Report on the dimensional model (BigQuery connector) |
 
 ## Data source
@@ -100,14 +90,16 @@ At 118M rows, rebuilding the fact on every run is wasteful and storage-spiky. `i
 ### 3. Partitioning + clustering
 `partition_by = year` lets BI queries scan a single year instead of the whole table (cheaper, faster, friendlier to the 1 TB/month query quota). `cluster_by [exporter_code, importer_code]` speeds up the most common filters (by partner country).
 
-### 4. Orchestration that matches the source's cadence
-BACI publishes **once a year**, on no fixed date. The DAG therefore runs monthly and opens with
-a `ShortCircuitOperator` that checks whether the year's CSVs have landed — ingestion skips when
-they have not, while the dbt branch still runs (`trigger_rule=NONE_FAILED`) so the models stay
-fresh and the tests keep guarding the warehouse. Every task is scoped to one `target_year` and
-the loader deletes that year before appending it, making retries and backfills idempotent.
+### 4. Why Airflow was removed
+The pipeline was first orchestrated by an **Airflow 3 DAG on Docker Compose** (5 services,
+including a Postgres metadata DB). It ran green end to end in 125 seconds and proved that
+the per-year loads are idempotent. It was then removed on purpose: BACI publishes **once a
+year**, so a scheduler that stays on all year spends 11 months skipping. For an annual batch,
+a handful of commands run on demand is the right size of tool. The loader itself stays
+idempotent (it deletes a year before appending it), so re-runs are safe without an orchestrator.
 
-Full reasoning in [`airflow/README.md`](airflow/README.md).
+The full Airflow version (DAG, Docker stack, screenshots of the green run) is preserved at
+the [`airflow-v1`](https://github.com/cordulaflavio/global-trade-pipeline/tree/airflow-v1) tag.
 
 ### 5. Staging as views
 Staging models are **views**, not tables — zero storage cost, and the typing/cleaning logic stays close to the raw without duplicating 100M+ rows.
@@ -155,19 +147,6 @@ dbt run
 dbt test
 ```
 
-### 3. Run the whole thing under Airflow
-Airflow needs a POSIX environment, so it runs in Docker — five services, including the
-Postgres metadata database. Full reasoning in [`airflow/README.md`](airflow/README.md).
-
-```bash
-cd airflow
-cp .env.example .env      # then point GCP_KEY_DIR at your key directory
-docker compose up -d      # UI on http://localhost:8080  (admin / admin)
-```
-
-The DAG arrives paused; unpause it to run. A verified end-to-end run completes in
-**125 seconds** — see the task-by-task breakdown in [`airflow/README.md`](airflow/README.md).
-
 ## Known limitations (free tier)
 
 - **Avoid `dbt run --full-refresh`** on the fact: it re-reads the entire raw cross-project and recreates the table, causing a storage peak that can exceed the 10 GB quota. Use normal incremental runs.
@@ -179,8 +158,7 @@ The DAG arrives paused; unpause it to run. A verified end-to-end run completes i
 - [x] Ingestion (Python → BigQuery raw)
 - [x] dbt staging → dims → incremental fact (34 tests passing)
 - [x] Storage-quota solution (two-project split)
-- [x] Airflow 3 DAG orchestrating ingestion → dbt run → dbt test (verified green, 125s)
-- [x] Docker Compose stack (Airflow + Postgres, reproducible)
+- [x] ~~Airflow 3 DAG on Docker Compose~~ — built and verified green (125s), then removed as oversized for an annual source (see tag [`airflow-v1`](https://github.com/cordulaflavio/global-trade-pipeline/tree/airflow-v1))
 - [ ] Power BI report (publish to web) **← v1 publishable**
 - [ ] Streamlit app (public link)
 - [ ] GitHub Actions CI (dbt tests on push)
